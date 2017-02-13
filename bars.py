@@ -77,8 +77,8 @@ if __name__ == '__main__':
     lat = input('Enter your Latitude:')
     long = input('Enter your Longitude:')
     dist, closest_id=get_closest_bar(json_damp,long,lat)
-    print('Biggest bar is ', json_damp[big_id]['Name'],' Seats number ',json_damp[big_id]['SeatsCount'])
-    print('Smallest bar is ', json_damp[small_id]['Name'],' Seats number ',json_damp[small_id]['SeatsCount'])
-    print('Closest bar is ', json_damp[closest_id]['Name'],'Distance to bar- %.0f' % dist, ' [meters]' )
+    print('Biggest bar is', json_damp[big_id]['Name'],' Seats number ',json_damp[big_id]['SeatsCount'])
+    print('Smallest bar is', json_damp[small_id]['Name'],' Seats number ',json_damp[small_id]['SeatsCount'])
+    print('Closest bar is', json_damp[closest_id]['Name'],'Distance to bar - %.0f' % dist, ' [meters]' )
 
     pass
