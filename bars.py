@@ -59,6 +59,7 @@ def get_closest_bar(data, longitude, latitude):
         dist = 6372795*math.atan2(math.sqrt(math.pow(cl2*sdelta,2)+math.pow(cl1*sl2-sl1*cl2*cdelta,2)),sl1*sl2+cl1*cl2*cdelta)
         if dist<closest:
             closest=dist
+            id=count
         count+=1
     return closest, id    
     pass
@@ -74,10 +75,10 @@ if __name__ == '__main__':
     big_id=get_biggest_bar(json_damp)
     small_id=get_smallest_bar(json_damp)
     lat = input('Enter your Latitude:')
-    long = input('Enter your Longitude')
+    long = input('Enter your Longitude:')
     dist, closest_id=get_closest_bar(json_damp,long,lat)
     print('Biggest bar is ', json_damp[big_id]['Name'],' Seats number ',json_damp[big_id]['SeatsCount'])
     print('Smallest bar is ', json_damp[small_id]['Name'],' Seats number ',json_damp[small_id]['SeatsCount'])
-    print('Closest bar is ', json_damp[closest_id]['Name'],'Distance >> %.0f' % dist, ' [meters]' )
+    print('Closest bar is ', json_damp[closest_id]['Name'],'Distance to bar- %.0f' % dist, ' [meters]' )
 
     pass
