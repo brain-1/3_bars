@@ -8,41 +8,33 @@ def load_data(filepath):
         filename = z.namelist()  
         print("Load data from "+filename[0])  
         with z.open(filename[0]) as f:  
-            data = json.loads(f.read().decode("cp1251"))   
-    return data
+            json_data = json.loads(f.read().decode("cp1251"))   
+    return json_data
     pass
 
 
 def get_biggest_bar(data):
     seats=int(data[0]['SeatsCount'])
-    id=0
-    count=0
-    for bar in data:
+    for id, bar in enumerate(data):
         if int(bar.get('SeatsCount')) > seats:
             seats=int(bar.get('SeatsCount'))
-            id=count
-        count+=1
-    return id
+            big_id=id
+    return big_id
     pass
 
 def get_smallest_bar(data):
     seats=int(data[0]['SeatsCount'])
-    id=0
-    count=0
-    for bar in data:
+    for id, bar in enumerate(data):
         if int(bar.get('SeatsCount')) < seats:
             seats=int(bar.get('SeatsCount'))
-            id=count
-        count+=1
-    return id
+            small_id=id
+    return small_id
     pass
 
 
 def get_closest_bar(data, longitude, latitude):
-    closest=20000000
-    count=0
-    id=0
-    for bar in data:
+    closest_dist=20000000
+    for id, bar in enumerate(data):
         llat2=float(bar.get('Latitude_WGS84')) 
         llong2 = bar.get('Longitude_WGS84')
         lat1 = float(latitude)*math.pi/180.
@@ -56,29 +48,28 @@ def get_closest_bar(data, longitude, latitude):
         delta = long2 - long1
         cdelta = math.cos(delta)
         sdelta = math.sin(delta)
-        dist = 6372795*math.atan2(math.sqrt(math.pow(cl2*sdelta,2)+math.pow(cl1*sl2-sl1*cl2*cdelta,2)),sl1*sl2+cl1*cl2*cdelta)
-        if dist<closest:
-            closest=dist
-            id=count
-        count+=1
-    return closest, id    
+        current_dist = 6372795*math.atan2(math.sqrt(math.pow(cl2*sdelta,2)+math.pow(cl1*sl2-sl1*cl2*cdelta,2)),sl1*sl2+cl1*cl2*cdelta)
+        if current_dist<closest_dist:
+            closest_dist=current_dist
+            closest_id=id
+    return closest_dist, closest_id    
     pass
 
 
 if __name__ == '__main__':
 
     print ("Download latest data file...")
-    url='http://op.mos.ru/EHDWSREST/catalog/export/get?id=84505'
-    urllib.request.urlretrieve(url,"data.gz")
+    url_json='http://op.mos.ru/EHDWSREST/catalog/export/get?id=84505'
+    urllib.request.urlretrieve(url_json,"data.gz")
     print ("Done")
-    json_damp = load_data("data.gz")
-    big_id=get_biggest_bar(json_damp)
-    small_id=get_smallest_bar(json_damp)
+    json_dump = load_data("data.gz")
+    big_id=get_biggest_bar(json_dump)
+    small_id=get_smallest_bar(json_dump)
     lat = input('Enter your Latitude:')
     long = input('Enter your Longitude:')
-    dist, closest_id=get_closest_bar(json_damp,long,lat)
-    print('Biggest bar is', json_damp[big_id]['Name'],' Seats number ',json_damp[big_id]['SeatsCount'])
-    print('Smallest bar is', json_damp[small_id]['Name'],' Seats number ',json_damp[small_id]['SeatsCount'])
-    print('Closest bar is', json_damp[closest_id]['Name'],'Distance to bar - %.0f' % dist, ' [meters]' )
+    dist, closest_id=get_closest_bar(json_dump,long,lat)
+    print('Biggest bar is', json_dump[big_id]['Name'],' Seats number ',json_dump[big_id]['SeatsCount'])
+    print('Smallest bar is', json_dump[small_id]['Name'],' Seats number ',json_dump[small_id]['SeatsCount'])
+    print('Closest bar is', json_dump[closest_id]['Name'],'Distance to bar - %.0f' % dist, ' [meters]' )
 
     pass
